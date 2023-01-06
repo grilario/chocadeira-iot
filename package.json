@@ -30,7 +30,8 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@types/styled-components": "^5.1.26",
-    "@types/styled-components-react-native": "^5.2.0"
+    "@types/styled-components-react-native": "^5.2.0",
+    "babel-plugin-module-resolver": "^4.1.0"
   },
   "private": true
 }
