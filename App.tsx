@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -10,6 +11,7 @@ import {
 } from "@expo-google-fonts/open-sans";
 
 import TopTabNavigation from "./src/navigation/TopTabNavigation";
+import { theme } from "./src/styles/theme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,10 +33,12 @@ export default function App() {
 
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
-      <NavigationContainer>
-        <TopTabNavigation />
-        <StatusBar style="auto" />
-      </NavigationContainer>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <TopTabNavigation />
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
