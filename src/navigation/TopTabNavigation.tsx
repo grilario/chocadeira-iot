@@ -37,6 +37,7 @@ export default function TopTabNavigation() {
             backgroundColor: theme.colors.primary,
           },
         }}
+        sceneContainerStyle={{ backgroundColor: "#F8F8F8" }}
       >
         <Tab.Screen
           name="monitoring"
