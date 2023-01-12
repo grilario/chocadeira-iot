@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/open-sans": "^0.2.2",
+    "@react-native-community/slider": "4.2.4",
     "@react-navigation/material-top-tabs": "^6.5.1",
     "@react-navigation/native": "^6.1.1",
     "@shopify/react-native-skia": "0.1.157",
