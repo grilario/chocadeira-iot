@@ -7,7 +7,7 @@ import { Container, InfoStatus, Title, Divider } from "./styles";
 
 export default function Monitoring() {
   return (
-    <Container>
+    <Container showsVerticalScrollIndicator={false}>
       <Divider />
       <InfoStatus>
         <InfoDisplay icon="thermometer" value="35°C" />

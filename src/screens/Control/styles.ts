@@ -6,7 +6,7 @@ interface SecondaryContainerControlProps {
 
 export const Container = styled.ScrollView`
   flex: 1;
-  padding: 20px;
+  padding: 8px 20px 20px;
 `;
 
 export const MasterContainerControl = styled.View`
