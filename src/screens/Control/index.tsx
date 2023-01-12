@@ -34,7 +34,7 @@ export default function Control() {
       >
         <Slider title="Controle da Lâmpada" />
         <Slider title="Controle da Ventoinha" />
-        <TimeList title="Viragem dos ovos"/>
+        <TimeList title="Viragem dos ovos" isEnabled={isEnabled} />
       </SecondaryContainerControl>
     </Container>
   );

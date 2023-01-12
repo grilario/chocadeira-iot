@@ -12,16 +12,18 @@ import { Button, Container, Divider, Item, Text } from "./styles";
 
 interface ITimeListProps {
   title: string;
+  isEnabled: boolean;
 }
 
 interface IItemListProps {
   icon: React.ReactNode;
   data: { index: number; date: string };
+  isEnabled: boolean;
   onTimePress: (number, string) => void;
   onIconPress: (number, string) => void;
 }
 
-export default function TimeList({ title }: ITimeListProps) {
+export default function TimeList({ title, isEnabled }: ITimeListProps) {
   const { colors } = useTheme();
 
   const [list, setList] = useState([format(new Date(), "HH:mm")]);
@@ -70,6 +72,7 @@ export default function TimeList({ title }: ITimeListProps) {
         data={{ index: 999, date: format(new Date(), "HH:mm") }}
         onIconPress={handleAddItem}
         onTimePress={() => {}}
+        isEnabled={isEnabled}
       />
       <Divider />
       {list.map((date, i) => (
@@ -79,13 +82,20 @@ export default function TimeList({ title }: ITimeListProps) {
           data={{ index: i, date }}
           onIconPress={handleRemoveItem}
           onTimePress={handleUpdateList}
+          isEnabled={isEnabled}
         />
       ))}
     </Container>
   );
 }
 
-function ListItem({ icon, data, onIconPress, onTimePress }: IItemListProps) {
+function ListItem({
+  icon,
+  data,
+  onIconPress,
+  onTimePress,
+  isEnabled,
+}: IItemListProps) {
   const [date, setDate] = useState(new Date());
 
   function handleShow() {
@@ -107,10 +117,12 @@ function ListItem({ icon, data, onIconPress, onTimePress }: IItemListProps) {
   return (
     <>
       <Item
-        style={{
-          shadowColor: "#0000008f",
-          elevation: 2,
-        }}
+        style={
+          isEnabled && {
+            shadowColor: "#0000008f",
+            elevation: 2,
+          }
+        }
       >
         <Button onPress={handleShow}>
           <Text>{data.index === 999 ? format(date, "HH:mm") : data.date}</Text>
