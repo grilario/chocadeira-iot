@@ -3,6 +3,7 @@ import { Switch } from "react-native";
 import { useTheme } from "styled-components/native";
 
 import Slider from "@components/Slider";
+import TimeList from "@components/TimeList";
 import Title from "@components/Title";
 
 import {
@@ -17,7 +18,7 @@ export default function Control() {
   const [isEnabled, setIsEnabled] = useState(false);
 
   return (
-    <Container>
+    <Container showsVerticalScrollIndicator={false}>
       <MasterContainerControl>
         <Title>Chocadeira</Title>
         <Switch
@@ -33,6 +34,7 @@ export default function Control() {
       >
         <Slider title="Controle da Lâmpada" />
         <Slider title="Controle da Ventoinha" />
+        <TimeList title="Viragem dos ovos"/>
       </SecondaryContainerControl>
     </Container>
   );

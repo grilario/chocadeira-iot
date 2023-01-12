@@ -4,7 +4,7 @@ interface SecondaryContainerControlProps {
   enable: boolean;
 }
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   flex: 1;
   padding: 20px;
 `;
