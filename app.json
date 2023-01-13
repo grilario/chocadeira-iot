@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "brooder",
+    "name": "Chocadeira",
     "slug": "brooder",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.grilario.brooder"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "12d28af8-5401-420b-98d9-2ddb83dbd948"
+      }
     }
   }
 }
