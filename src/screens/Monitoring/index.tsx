@@ -11,6 +11,7 @@ import {
 import Chart from "@components/Chart";
 import InfoDisplay from "@components/InfoDisplay";
 import { database } from "@utils/firebase";
+import { generateList, simplifyList } from "@utils/data";
 
 import { Container, InfoStatus, Title, Divider } from "./styles";
 
@@ -79,15 +80,15 @@ export default function Monitoring() {
 
 function ChartLamp() {
   function getTodayDate() {
-    return simpleDataOnOff;
+    return simplifyList(generateList(288, 0, 1), 12);
   }
 
   function getThreeDaysDate() {
-    return simpleDataOnOff;
+    return simplifyList(generateList(288 * 3, 0, 1), 8 * 3);
   }
 
   function getWeekDate() {
-    return simpleDataOnOff;
+    return simplifyList(generateList(288 * 7, 0, 1), 6 * 7);
   }
 
   return (
@@ -104,15 +105,15 @@ function ChartLamp() {
 
 function ChartFan() {
   function getTodayDate() {
-    return simpleDataOnOff;
+    return simplifyList(generateList(288, 0, 1), 12);
   }
 
   function getThreeDaysDate() {
-    return simpleDataOnOff;
+    return simplifyList(generateList(288 * 3, 0, 1), 8 * 3);
   }
 
   function getWeekDate() {
-    return simpleDataOnOff;
+    return simplifyList(generateList(288 * 7, 0, 1), 6 * 7);
   }
 
   return (
@@ -129,15 +130,15 @@ function ChartFan() {
 
 function ChartTemperature() {
   function getTodayDate() {
-    return simpleData;
+    return simplifyList(generateList(288, 25, 42), 12);
   }
 
   function getThreeDaysDate() {
-    return simpleData;
+    return simplifyList(generateList(288 * 3, 25, 42), 12 * 3);
   }
 
   function getWeekDate() {
-    return simpleData;
+    return simplifyList(generateList(288 * 7, 25, 42), 12 * 7);
   }
 
   return (
@@ -155,15 +156,15 @@ function ChartTemperature() {
 
 function ChartHumidity() {
   function getTodayDate() {
-    return simpleData;
+    return simplifyList(generateList(288, 55, 92), 12);
   }
 
   function getThreeDaysDate() {
-    return simpleData;
+    return simplifyList(generateList(288 * 3, 55, 92), 12 * 3);
   }
 
   function getWeekDate() {
-    return simpleData;
+    return simplifyList(generateList(288 * 7, 55, 92), 12 * 7);
   }
 
   return (
@@ -178,73 +179,3 @@ function ChartHumidity() {
     />
   );
 }
-
-const simpleDataOnOff = [
-  {
-    date: 1673405063000,
-    value: 0,
-  },
-  {
-    date: 1673356253000,
-    value: 0,
-  },
-  {
-    date: 1673368129000,
-    value: 1,
-  },
-  {
-    date: 1673356034000,
-    value: 1,
-  },
-  {
-    date: 1673362575000,
-    value: 0,
-  },
-  {
-    date: 1673360431000,
-    value: 1,
-  },
-  {
-    date: 1673339469000,
-    value: 0,
-  },
-  {
-    date: 1673334519000,
-    value: 1,
-  },
-].sort((a, b) => a.date - b.date);
-
-const simpleData = [
-  {
-    date: 1673405063000,
-    value: 34,
-  },
-  {
-    date: 1673356253000,
-    value: 55,
-  },
-  {
-    date: 1673368129000,
-    value: 28,
-  },
-  {
-    date: 1673356034000,
-    value: 43,
-  },
-  {
-    date: 1673362575000,
-    value: 52,
-  },
-  {
-    date: 1673360431000,
-    value: 33,
-  },
-  {
-    date: 1673339469000,
-    value: 39,
-  },
-  {
-    date: 1673334519000,
-    value: 41,
-  },
-].sort((a, b) => a.date - b.date);
