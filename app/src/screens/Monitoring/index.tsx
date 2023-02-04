@@ -32,17 +32,13 @@ export default function Monitoring() {
 }
 
 function ChartLamp() {
-  function getTodayDate() {
-    return simplifyList(generateList(288, 0, 1), 12);
-  }
+  const todayData = simplifyList(generateList(288, 0, 1), 12);
+  const daysData = simplifyList(generateList(288 * 3, 0, 1), 8 * 3);
+  const weekData = simplifyList(generateList(288 * 7, 0, 1), 6 * 7);
 
-  function getThreeDaysDate() {
-    return simplifyList(generateList(288 * 3, 0, 1), 8 * 3);
-  }
-
-  function getWeekDate() {
-    return simplifyList(generateList(288 * 7, 0, 1), 6 * 7);
-  }
+  const getTodayDate = () => todayData;
+  const getThreeDaysDate = () => daysData;
+  const getWeekDate = () => weekData;
 
   return (
     <Chart
@@ -57,17 +53,13 @@ function ChartLamp() {
 }
 
 function ChartFan() {
-  function getTodayDate() {
-    return simplifyList(generateList(288, 0, 1), 12);
-  }
+  const todayData = simplifyList(generateList(288, 0, 1), 12);
+  const daysData = simplifyList(generateList(288 * 3, 0, 1), 8 * 3);
+  const weekData = simplifyList(generateList(288 * 7, 0, 1), 6 * 7);
 
-  function getThreeDaysDate() {
-    return simplifyList(generateList(288 * 3, 0, 1), 8 * 3);
-  }
-
-  function getWeekDate() {
-    return simplifyList(generateList(288 * 7, 0, 1), 6 * 7);
-  }
+  const getTodayDate = () => todayData;
+  const getThreeDaysDate = () => daysData;
+  const getWeekDate = () => weekData;
 
   return (
     <Chart
@@ -82,17 +74,13 @@ function ChartFan() {
 }
 
 function ChartTemperature() {
-  function getTodayDate() {
-    return simplifyList(generateList(288, 25, 42), 12);
-  }
+  const todayData = simplifyList(generateList(288, 25, 42), 12);
+  const daysData = simplifyList(generateList(288 * 3, 25, 42), 8 * 3);
+  const weekData = simplifyList(generateList(288 * 7, 25, 42), 6 * 7);
 
-  function getThreeDaysDate() {
-    return simplifyList(generateList(288 * 3, 25, 42), 12 * 3);
-  }
-
-  function getWeekDate() {
-    return simplifyList(generateList(288 * 7, 25, 42), 12 * 7);
-  }
+  const getTodayDate = () => todayData;
+  const getThreeDaysDate = () => daysData;
+  const getWeekDate = () => weekData;
 
   return (
     <Chart
@@ -108,17 +96,13 @@ function ChartTemperature() {
 }
 
 function ChartHumidity() {
-  function getTodayDate() {
-    return simplifyList(generateList(288, 55, 92), 12);
-  }
+  const todayData = simplifyList(generateList(288, 55, 92), 12);
+  const daysData = simplifyList(generateList(288 * 3, 55, 92), 8 * 3);
+  const weekData = simplifyList(generateList(288 * 7, 55, 92), 6 * 7);
 
-  function getThreeDaysDate() {
-    return simplifyList(generateList(288 * 3, 55, 92), 12 * 3);
-  }
-
-  function getWeekDate() {
-    return simplifyList(generateList(288 * 7, 55, 92), 12 * 7);
-  }
+  const getTodayDate = () => todayData;
+  const getThreeDaysDate = () => daysData;
+  const getWeekDate = () => weekData;
 
   return (
     <Chart
