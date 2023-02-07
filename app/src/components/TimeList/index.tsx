@@ -5,6 +5,8 @@ import parse from "date-fns/parse";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Trash, Plus } from "phosphor-react-native";
 import { useTheme } from "styled-components/native";
+import uuid from "react-native-uuid";
+import Animated, { Layout } from "react-native-reanimated";
 
 import Title from "@components/Title";
 
@@ -26,15 +28,17 @@ interface IItemListProps {
 export default function TimeList({ title, isEnabled }: ITimeListProps) {
   const { colors } = useTheme();
 
-  const [list, setList] = useState([format(new Date(), "HH:mm")]);
+  const [list, setList] = useState([
+    { id: uuid.v4().toString(), time: format(new Date(), "HH:mm") },
+  ]);
 
   async function handleAddItem(index, time) {
     if (list.length > 3) return;
 
     setList((state) =>
-      [...state, time].sort((a, b) => {
-        const dateA = parse(a, "HH:mm", new Date(0)).getTime();
-        const dateB = parse(b, "HH:mm", new Date(0)).getTime();
+      [...state, { id: uuid.v4().toString(), time }].sort((a, b) => {
+        const dateA = parse(a.time, "HH:mm", new Date(0)).getTime();
+        const dateB = parse(b.time, "HH:mm", new Date(0)).getTime();
 
         return dateA - dateB;
       })
@@ -44,11 +48,11 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
   async function handleUpdateList(index: number, date: string) {
     setList((prevState) => {
       const state = [...prevState];
-      state[index] = date;
+      state[index].time = date;
 
       return state.sort((a, b) => {
-        const dateA = parse(a, "HH:mm", new Date(0)).getTime();
-        const dateB = parse(b, "HH:mm", new Date(0)).getTime();
+        const dateA = parse(a.time, "HH:mm", new Date(0)).getTime();
+        const dateB = parse(b.time, "HH:mm", new Date(0)).getTime();
 
         return dateA - dateB;
       });
@@ -75,15 +79,16 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
         isEnabled={isEnabled}
       />
       <Divider />
-      {list.map((date, i) => (
-        <ListItem
-          key={i}
-          icon={<Trash color={colors.primary} size={24} />}
-          data={{ index: i, date }}
-          onIconPress={handleRemoveItem}
-          onTimePress={handleUpdateList}
-          isEnabled={isEnabled}
-        />
+      {list.map((item, i) => (
+        <Animated.View key={item.id} layout={Layout}>
+          <ListItem
+            icon={<Trash color={colors.primary} size={24} />}
+            data={{ index: i, date: item.time }}
+            onIconPress={handleRemoveItem}
+            onTimePress={handleUpdateList}
+            isEnabled={isEnabled}
+          />
+        </Animated.View>
       ))}
     </Container>
   );

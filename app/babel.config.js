@@ -12,10 +12,11 @@ module.exports = function (api) {
             "@screens": "./src/screens",
             "@utils": "./src/utils",
             "@services": "./src/services",
-            "@assets": "./assets"
+            "@assets": "./assets",
           },
         },
       ],
+      "react-native-reanimated/plugin",
     ],
   };
 };
