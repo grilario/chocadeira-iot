@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Switch } from "react-native";
 import { useTheme } from "styled-components/native";
 
 import Slider from "@components/Slider";
+import Switch from "@components/Switch";
 import TimeList from "@components/TimeList";
 import Title from "@components/Title";
 
@@ -22,9 +22,7 @@ export default function Control() {
       <MasterContainerControl>
         <Title>Chocadeira</Title>
         <Switch
-          trackColor={{ false: colors.textSecondary, true: colors.primary }}
-          thumbColor="#ffffff"
-          onValueChange={() => setIsEnabled((state) => !state)}
+          onToggle={() => setIsEnabled((state) => !state)}
           value={isEnabled}
         />
       </MasterContainerControl>
