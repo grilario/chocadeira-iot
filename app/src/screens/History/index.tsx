@@ -1,9 +1,14 @@
 import { FlatList } from "react-native";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
-import Title from "@components/Title";
-
-import { Container, Item, Text, TimeIndicator } from "./styles";
+import {
+  Container,
+  Item,
+  Separator,
+  Title,
+  Text,
+  TimeIndicator,
+} from "./styles";
 
 export default function History() {
   const data = new Array(80).fill({
@@ -15,16 +20,21 @@ export default function History() {
     <Container>
       <FlatList
         showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 20 }}
         data={data}
         renderItem={({ item }) => (
           <Item>
             <Text>{item.action}</Text>
             <TimeIndicator>
-              {formatDistanceToNow(item.date, { addSuffix: true })}
+              {formatDistanceToNow(item.date, { addSuffix: true }).replace(
+                /^\w/,
+                function ($0) {
+                  return $0.toUpperCase();
+                }
+              )}
             </TimeIndicator>
           </Item>
         )}
+        ItemSeparatorComponent={<Separator />}
         ListHeaderComponent={<Title>Histórico de comandos</Title>}
         ListHeaderComponentStyle={{ marginVertical: 20 }}
       />
