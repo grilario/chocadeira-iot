@@ -1,15 +1,19 @@
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
-#include <ESP8266WiFi.h>
-#include <FirebaseESP8266.h>
-#include <DHT.h>
+#include "utils.h"
 
 void setup()
 {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
+
+  Utils::setupWiFi();
+  Utils::setupFirebase();
+  Utils::setupTime();
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
+  delay(1000);
+
+  Serial.println(Utils::getFormattedTime());
 }
