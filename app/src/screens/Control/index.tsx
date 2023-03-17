@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTheme } from "styled-components/native";
 
 import Slider from "@components/Slider";
 import Switch from "@components/Switch";
@@ -13,8 +12,6 @@ import {
 } from "./styles";
 
 export default function Control() {
-  const { colors } = useTheme();
-
   const [isEnabled, setIsEnabled] = useState(false);
 
   return (

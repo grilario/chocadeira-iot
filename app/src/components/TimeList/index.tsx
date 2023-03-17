@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Platform } from "react-native";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Trash, Plus } from "phosphor-react-native";
 import { useTheme } from "styled-components/native";
@@ -11,6 +9,16 @@ import Animated, { Layout } from "react-native-reanimated";
 import Title from "@components/Title";
 
 import { Button, Container, Divider, Item, Text } from "./styles";
+
+import { database } from "@utils/firebase";
+
+import { get, query, ref, set } from "firebase/database";
+import format from "date-fns/format";
+import parse from "date-fns/parse";
+import setHours from "date-fns/setHours";
+import setMinutes from "date-fns/setMinutes";
+import getHours from "date-fns/getHours";
+import getMinutes from "date-fns/getMinutes";
 
 interface ITimeListProps {
   title: string;
@@ -27,10 +35,26 @@ interface IItemListProps {
 
 export default function TimeList({ title, isEnabled }: ITimeListProps) {
   const { colors } = useTheme();
+  const [list, setList] = useState([]);
 
-  const [list, setList] = useState([
-    { id: uuid.v4().toString(), time: format(new Date(), "HH:mm") },
-  ]);
+  const reference = ref(database, "/operation/scroll");
+
+  useEffect(() => {
+    (async () => {
+      const list = await get(query(reference));
+
+      setList(
+        list.val().map((time) => {
+          const date = setHours(
+            setMinutes(new Date(), +time.toString().slice(-2)),
+            +time.toString().slice(-4, 2)
+          );
+
+          return { id: uuid.v4().toString(), time: format(date, "HH:mm") };
+        })
+      );
+    })();
+  }, []);
 
   async function handleAddItem(index, time) {
     if (list.length > 3) return;
@@ -43,6 +67,8 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
         return dateA - dateB;
       })
     );
+
+    uploadList();
   }
 
   async function handleUpdateList(index: number, date: string) {
@@ -57,6 +83,8 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
         return dateA - dateB;
       });
     });
+
+    uploadList();
   }
 
   async function handleRemoveItem(index: number) {
@@ -65,12 +93,28 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
       state.splice(index, 1);
       return state;
     });
+
+    uploadList();
+  }
+
+  async function uploadList() {
+    const uploadList = list.map(({ time }) => {
+      const parsed = parse(time, "HH:mm", new Date());
+
+      const hours = getHours(parsed).toString();
+      const minutes = getMinutes(parsed).toString();
+
+      return +"".concat(hours, minutes);
+    });
+
+    set(reference, uploadList);
   }
 
   return (
     <Container>
       <Title>{title}</Title>
       <Divider />
+
       <ListItem
         icon={<Plus color={colors.primary} size={24} />}
         data={{ index: 999, date: format(new Date(), "HH:mm") }}
@@ -79,17 +123,21 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
         isEnabled={isEnabled}
       />
       <Divider />
-      {list.map((item, i) => (
-        <Animated.View key={item.id} layout={Layout}>
-          <ListItem
-            icon={<Trash color={colors.primary} size={24} />}
-            data={{ index: i, date: item.time }}
-            onIconPress={handleRemoveItem}
-            onTimePress={handleUpdateList}
-            isEnabled={isEnabled}
-          />
-        </Animated.View>
-      ))}
+      {list.length !== 0 && (
+        <>
+          {list.map((item, i) => (
+            <Animated.View key={item.id} layout={Layout}>
+              <ListItem
+                icon={<Trash color={colors.primary} size={24} />}
+                data={{ index: i, date: item.time }}
+                onIconPress={handleRemoveItem}
+                onTimePress={handleUpdateList}
+                isEnabled={isEnabled}
+              />
+            </Animated.View>
+          ))}
+        </>
+      )}
     </Container>
   );
 }
