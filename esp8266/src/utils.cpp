@@ -1,8 +1,7 @@
 #include "utils.h"
 
-#define WIFI_SSID "Vanessa"
-#define WIFI_PASSWORD "8024b97c"
-
+#define WIFI_SSID "Tay sz"
+#define WIFI_PASSWORD "88092528"
 #define DATABASE_URL "chocadeira-68d24-default-rtdb.firebaseio.com"
 #define DATABASE_SECRET "ZEDhLBWUUx2BMjnuzptjkEKsjz87rIkPrkgvZ0wq"
 
@@ -71,7 +70,33 @@ namespace Utils
     Firebase.setStringAsync(fbdo, path, string);
   }
 
-  void pushValue(const char *path, int value)
+  int getCommandTime(Command command)
+  {
+    if (command == Command::Lamp)
+    {
+      Firebase.getInt(fbdo, "/operation/command/lamp");
+    }
+    else
+    {
+      Firebase.getInt(fbdo, "/operation/command/fan");
+    }
+
+    return fbdo.to<int>();
+  }
+
+  void clearCommandTime(Command command)
+  {
+    if (command == Command::Lamp)
+    {
+      Firebase.setIntAsync(fbdo, "/operation/command/lamp", 0);
+    }
+    else
+    {
+      Firebase.setIntAsync(fbdo, "/operation/command/fan", 0);
+    }
+  }
+
+  void pushValue(const char *path, float value)
   {
     FirebaseJson json;
 
@@ -82,4 +107,15 @@ namespace Utils
 
     Firebase.RTDB.pushJSONAsync(&fbdo, path, &json);
   };
+
+  FirebaseJsonArray getArray(const char *path)
+  {
+    FirebaseJsonArray arr;
+
+    Firebase.RTDB.getArray(&fbdo, path);
+
+    arr = fbdo.to<FirebaseJsonArray>();
+
+    return arr;
+  }
 }

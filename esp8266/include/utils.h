@@ -9,6 +9,12 @@
 
 #endif
 
+enum Command
+{
+  Lamp,
+  Fan
+};
+
 namespace Utils
 {
   void setupWiFi();
@@ -17,5 +23,8 @@ namespace Utils
   String getFormattedTime();
   unsigned long getEpochTime();
   void setString(const char *path, String string);
-  void pushValue(const char *path, int value);
+  int getCommandTime(Command command);
+  void clearCommandTime(Command command);
+  void pushValue(const char *path, float value);
+  FirebaseJsonArray getArray(const char *path);
 }
