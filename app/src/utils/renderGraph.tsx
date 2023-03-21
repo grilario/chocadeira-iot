@@ -68,8 +68,10 @@ export function makeGraph({
   height,
   margin,
 }: IMakeGraphProps): GraphData {
+  console.log(data);
+  
   const [minValue, maxValue] = extent(data, (data) => data.value);
-  const [minDate, maxDate] = extent(data, (data) => data.date);
+  const [minDate, maxDate] = extent(data, (data) => data.time);
 
   const yScale = scaleLinear()
     .domain([minValue, maxValue])
@@ -85,7 +87,7 @@ export function makeGraph({
 
   const curvedLine = line<DataPoint>()
     .curve(curve)
-    .x((d) => xScale(d.date))
+    .x((d) => xScale(d.time))
     .y((d) => yScale(d.value));
 
   const skPath = Skia.Path.MakeFromSVGString(curvedLine(data));

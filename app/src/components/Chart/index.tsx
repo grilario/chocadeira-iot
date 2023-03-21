@@ -7,7 +7,7 @@ import { Graph, makeGraph } from "@utils/renderGraph";
 import { Button, Container, Legend, Tab, Title, Text } from "./styles";
 
 export interface DataPoint {
-  date: number;
+  time: number;
   value: number;
 }
 

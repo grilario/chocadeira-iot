@@ -4,7 +4,7 @@ export function generateList(length, minValue, maxValue) {
 
   for (let i = 0; i < length; i++) {
     dataList.push({
-      date: currentDate,
+      time: currentDate,
       value: getRandomNumber(minValue, maxValue),
     });
 

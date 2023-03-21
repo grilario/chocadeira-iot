@@ -8,6 +8,18 @@ import HumidityDisplay from "./Components/HumidityDisplay";
 import LightDisplay from "./Components/LightDisplay";
 
 import { Container, InfoStatus, Title, Divider } from "./styles";
+import { useCallback, useEffect, useState } from "react";
+import {
+  endAt,
+  get,
+  limitToLast,
+  orderByChild,
+  query,
+  ref,
+  startAt,
+} from "firebase/database";
+import { database } from "@utils/firebase";
+import subHours from "date-fns/subHours";
 
 export default function Monitoring() {
   return (
@@ -74,14 +86,44 @@ function ChartFan() {
 }
 
 function ChartTemperature() {
-  const todayData = simplifyList(generateList(288, 25, 42), 12);
-  const daysData = simplifyList(generateList(288 * 3, 25, 42), 8 * 3);
-  const weekData = simplifyList(generateList(288 * 7, 25, 42), 6 * 7);
+  const [temperaturesToday, setTemperaturesToday] = useState([]);
+  const [temperaturesThreeDays, setTemperaturesThreeDays] = useState([]);
+  const [temperaturesWeek, setTemperaturesWeek] = useState([]);
 
-  const getTodayDate = () => todayData;
-  const getThreeDaysDate = () => daysData;
-  const getWeekDate = () => weekData;
+  const getTodayDate = useCallback(() => temperaturesToday, [temperaturesToday])
+  const getThreeDaysDate = useCallback(() => temperaturesThreeDays, [temperaturesThreeDays])
+  const getWeekDate = useCallback(() => temperaturesWeek, [temperaturesWeek])
 
+  useEffect(() => {
+    const todayQuery = query(
+      ref(database, "operation/temperature"),
+      orderByChild("time"),
+      startAt(subHours(new Date(), 24).getTime(), "time")
+    );
+    const threeDaysQuery = query(
+      ref(database, "operation/temperature"),
+      orderByChild("time"),
+      startAt(subHours(new Date(), 24 * 3).getTime(), "time")
+    );
+    const weekQuery = query(
+      ref(database, "operation/temperature"),
+      orderByChild("time"),
+      startAt(subHours(new Date(), 24 * 7).getTime(), "time")
+    );
+
+    (async () => {
+      const temperaturesToday = await get(todayQuery);
+      const temperaturesThreeDays = await get(threeDaysQuery);
+      const temperaturesWeek = await get(weekQuery);
+
+      setTemperaturesToday(Object.values(temperaturesToday.val()));
+      setTemperaturesThreeDays(Object.values(temperaturesThreeDays.val()));
+      setTemperaturesWeek(Object.values(temperaturesWeek.val()));
+    })();
+  }, []);
+
+  if (!temperaturesToday.length) return
+  
   return (
     <Chart
       title="Temperatura"
