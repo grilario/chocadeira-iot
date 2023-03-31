@@ -1,7 +1,9 @@
+#include <addons/TokenHelper.h>
+#include <addons/RTDBHelper.h>
 #include "utils.h"
 
-#define WIFI_SSID "Tay sz"
-#define WIFI_PASSWORD "88092528"
+#define WIFI_SSID "Vanessa"
+#define WIFI_PASSWORD "8024b97c"
 #define DATABASE_URL "chocadeira-68d24-default-rtdb.firebaseio.com"
 #define DATABASE_SECRET "ZEDhLBWUUx2BMjnuzptjkEKsjz87rIkPrkgvZ0wq"
 
@@ -65,34 +67,52 @@ namespace Utils
     return timeClient.getEpochTime();
   }
 
+  int getHours()
+  {
+    timeClient.update();
+
+    return atoi(timeClient.getHours() + "" + timeClient.getMinutes());
+  }
+
   void setString(const char *path, String string)
   {
     Firebase.setStringAsync(fbdo, path, string);
   }
 
-  int getCommandTime(Command command)
+  std::tuple<int, String> getCommandTime(Command command)
   {
+    int time;
+    String type;
+
     if (command == Command::Lamp)
     {
-      Firebase.getInt(fbdo, "/operation/command/lamp");
+      Firebase.getInt(fbdo, "/operation/command/light/time");
+      time = fbdo.to<int>();
+
+      Firebase.getString(fbdo, "/operation/command/light/type");
+      type = fbdo.to<String>();
     }
     else
     {
-      Firebase.getInt(fbdo, "/operation/command/fan");
+      Firebase.getInt(fbdo, "/operation/command/fan/time");
+      time = fbdo.to<int>();
+
+      Firebase.getString(fbdo, "/operation/command/fan/type");
+      type = fbdo.to<String>();
     }
 
-    return fbdo.to<int>();
+    return std::make_tuple(time, type);
   }
 
   void clearCommandTime(Command command)
   {
     if (command == Command::Lamp)
     {
-      Firebase.setIntAsync(fbdo, "/operation/command/lamp", 0);
+      Firebase.setIntAsync(fbdo, "/operation/command/light/time", 0);
     }
     else
     {
-      Firebase.setIntAsync(fbdo, "/operation/command/fan", 0);
+      Firebase.setIntAsync(fbdo, "/operation/command/fan/time", 0);
     }
   }
 
@@ -117,5 +137,14 @@ namespace Utils
     arr = fbdo.to<FirebaseJsonArray>();
 
     return arr;
+  }
+
+  void test()
+  {
+    FirebaseJsonArray arr;
+    arr.setFloatDigits(2);
+    arr.setDoubleDigits(4);
+    arr.add("a", "b", "c", true, 45, (float)6.1432, 123.45692789);
+    Firebase.RTDB.setArray(&fbdo, "/test/array", &arr);
   }
 }

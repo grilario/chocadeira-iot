@@ -1,6 +1,7 @@
 #ifndef UTILS_HEADER_FILE
 #define UTILS_HEADER_FILE
 
+#include <tuple>
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <FirebaseESP8266.h>
@@ -22,9 +23,11 @@ namespace Utils
   void setupTime();
   String getFormattedTime();
   unsigned long getEpochTime();
+  int getHours();
   void setString(const char *path, String string);
-  int getCommandTime(Command command);
+  std::tuple<int, String> getCommandTime(Command command);
   void clearCommandTime(Command command);
   void pushValue(const char *path, float value);
   FirebaseJsonArray getArray(const char *path);
+  void test();
 }

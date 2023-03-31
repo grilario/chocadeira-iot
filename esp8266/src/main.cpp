@@ -1,26 +1,16 @@
-
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
-#include <Stepper.h>
 #include <DHT.h>
 
 #include "utils.h"
 
-#define LAMP_PIN 16
-#define FAN_PIN 5
-#define DHT_PIN 15
+#define LAMP_PIN D1
+#define MOTOR_PIN D2
+#define FAN_PIN D4
+#define DHT_PIN D3
 
 float temperature;
 float humidity;
-
-#define STEPPER_PIN_1 D0
-#define STEPPER_PIN_2 D1
-#define STEPPER_PIN_3 D2
-#define STEPPER_PIN_4 D3
-
-const int stepsPerRevolution = 2038;
-
-Stepper stepper(stepsPerRevolution, STEPPER_PIN_1, STEPPER_PIN_2, STEPPER_PIN_3, STEPPER_PIN_4);
 
 #define DHT_TYPE DHT22
 DHT dht(DHT_PIN, DHT_TYPE);
@@ -29,20 +19,21 @@ void setup()
 {
   Serial.begin(9600);
 
-  // Utils::setupWiFi();
-  // Utils::setupFirebase();
-  // Utils::setupTime();
+  Utils::setupWiFi();
+  Utils::setupFirebase();
+  Utils::setupTime();
 
   dht.begin();
 
-  // pinMode(LAMP_PIN, OUTPUT);
-  // pinMode(FAN_PIN, OUTPUT);
-
-  stepper.setSpeed(1);
+  pinMode(LAMP_PIN, OUTPUT);
+  pinMode(MOTOR_PIN, OUTPUT);
 }
 
 #define READ_SENSORS 2000
 unsigned long lastExecutedSensors = 0;
+
+#define CONTROL_DEVICE 2000
+unsigned long lastExecutedDevice = 0;
 
 #define EXECUTE_COMMAND 2000
 unsigned long lastExecutedCommand = 0;
@@ -53,6 +44,8 @@ unsigned long lastExecutedScroll = 0;
 // lampTime set: current time + time running
 unsigned long lampTime = 0;
 unsigned long fanTime = 0;
+String lampCommand;
+String fanCommand;
 bool forceLampTime = false;
 bool forceFanTime = false;
 
@@ -77,21 +70,26 @@ void handle_read_sensors()
 // read the firebase check if exist command and run, clear firebase
 void handle_execute_command()
 {
-  int lamp = Utils::getCommandTime(Command::Lamp);
-  int fan = Utils::getCommandTime(Command::Fan);
+  auto [lampCommandTime, lampCommandType] = Utils::getCommandTime(Command::Lamp);
+  auto [fanCommandTime, fanCommandType] = Utils::getCommandTime(Command::Fan);
 
-  if (lamp > 0)
+  if (lampCommandTime > 0)
   {
-    lampTime = millis() + lamp;
+    lampTime = millis() + lampCommandTime;
+    lampCommand = lampCommandType;
     forceLampTime = true;
     Utils::clearCommandTime(Command::Lamp);
+
+    Serial.printf("Comando da Lampada: Time - %i,   Type: %s \n", lampCommandTime, lampCommandType.c_str());
   }
 
-  if (fan > 0)
+  if (fanCommandTime > 0)
   {
-    fanTime = millis() + fan;
+    fanTime = millis() + fanCommandTime;
+    fanCommand = fanCommandType;
     forceFanTime = true;
     Utils::clearCommandTime(Command::Fan);
+    Serial.printf("Comando da Fan: Time - %i,   Type: %s \n", fanCommandTime, fanCommandType.c_str());
   }
 }
 
@@ -101,13 +99,18 @@ void handle_perform_scroll()
   FirebaseJsonArray array = Utils::getArray("/operation/scroll");
   FirebaseJsonData result;
 
-  for (size_t i = 0; i < array.size(); i++) {
+  for (size_t i = 0; i < array.size(); i++)
+  {
     array.get(result, i);
 
-    long long time = result.to<long long>();
+    String time = result.to<String>();
 
-    if (time >= millis() && time + 3000 <= millis()) {
+    // Serial.print("Time: ");
+    // Serial.println(time);
 
+    if (time == Utils::getFormattedTime().substring(0, 5))
+    {
+      Serial.printf("Scroll");
       // SCROLL
     }
   }
@@ -130,9 +133,12 @@ void handle_control_lamp()
     forceLampTime = false;
   }
 
-  if(temperature < 32) {
+  if (temperature < 32)
+  {
     digitalWrite(LAMP_PIN, HIGH);
-  } else if (temperature > 38) {
+  }
+  else if (temperature > 38)
+  {
     digitalWrite(LAMP_PIN, LOW);
   }
 }
@@ -154,25 +160,21 @@ void handle_control_fan()
     forceFanTime = false;
   }
 
-  if(temperature > 65) {
+  if (temperature > 65)
+  {
     digitalWrite(LAMP_PIN, HIGH);
-  } else if (temperature < 50) {
+  }
+  else if (temperature < 50)
+  {
     digitalWrite(LAMP_PIN, LOW);
   }
 }
 
+bool isScrolling = false;
+
 void loop()
 {
-  // unsigned long currentMillis = millis();
-
-  // stepper.step(stepsPerRevolution);
-  digitalWrite(D0, HIGH);
-  digitalWrite(D1, HIGH);
-  digitalWrite(D2, HIGH);
-  digitalWrite(D3, HIGH);
-  // delay(10000);
-  // digitalWrite(D0, LOW);
-  // delay(10000);
+  unsigned long currentMillis = millis();
 
   // if (currentMillis - lastExecutedSensors >= READ_SENSORS)
   // {
@@ -180,15 +182,35 @@ void loop()
   //   handle_read_sensors();
   // }
 
-  // if (currentMillis - lastExecutedCommand >= EXECUTE_COMMAND)
+  if (currentMillis - lastExecutedCommand >= EXECUTE_COMMAND)
+  {
+    lastExecutedCommand = currentMillis;
+    handle_execute_command();
+  }
+
+  // if (currentMillis - lastExecutedDevice >= CONTROL_DEVICE)
   // {
-  //   lastExecutedCommand = currentMillis;
-  //   handle_execute_command();
+  //   lastExecutedDevice = currentMillis;
+
+  //   handle_control_lamp();
+  //   handle_control_fan();
   // }
 
   // if (currentMillis - lastExecutedScroll >= PERFORM_SCROLL)
   // {
   //   lastExecutedScroll = currentMillis;
   //   handle_perform_scroll();
+  // }
+
+  //   if (isScrolling)
+  //   {
+  //     digitalWrite(MOTOR_PIN, LOW);
+  //   }
+  //   else
+  //   {
+  //     digitalWrite(MOTOR_PIN, HIGH);
+  //   }
+
+  //   isScrolling = !isScrolling;
   // }
 }
