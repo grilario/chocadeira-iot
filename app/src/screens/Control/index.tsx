@@ -27,8 +27,8 @@ export default function Control() {
         enable={isEnabled}
         pointerEvents={isEnabled ? "auto" : "none"}
       >
-        <Slider title="Controle da Lâmpada" />
-        <Slider title="Controle da Ventoinha" />
+        <Slider title="Controle da Lâmpada" command="light" />
+        <Slider title="Controle da Ventoinha" command="fan" />
         <TimeList title="Viragem dos ovos" isEnabled={isEnabled} />
       </SecondaryContainerControl>
     </Container>

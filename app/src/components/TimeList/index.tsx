@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import { Trash, Plus } from "phosphor-react-native";
-import { useTheme } from "styled-components/native";
+import { get, push, query, ref, set } from "firebase/database";
 import uuid from "react-native-uuid";
 import Animated, { Layout } from "react-native-reanimated";
+import format from "date-fns/format";
+import parse from "date-fns/parse";
+import setMinutes from "date-fns/setMinutes";
+import setHours from "date-fns/setHours";
+import { useTheme } from "styled-components/native";
+import { Trash, Plus } from "phosphor-react-native";
 
 import Title from "@components/Title";
 
@@ -12,13 +17,6 @@ import { Button, Container, Divider, Item, Text } from "./styles";
 
 import { database } from "@utils/firebase";
 
-import { get, query, ref, set } from "firebase/database";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import setHours from "date-fns/setHours";
-import setMinutes from "date-fns/setMinutes";
-import getHours from "date-fns/getHours";
-import getMinutes from "date-fns/getMinutes";
 
 interface ITimeListProps {
   title: string;
@@ -35,26 +33,41 @@ interface IItemListProps {
 
 export default function TimeList({ title, isEnabled }: ITimeListProps) {
   const { colors } = useTheme();
+
+  const [isFirstRender, setIsFirsRender] = useState(true);
   const [list, setList] = useState([]);
 
-  const reference = ref(database, "/operation/scroll");
-
   useEffect(() => {
-    (async () => {
-      const list = await get(query(reference));
+    if (isFirstRender) {
+      (async () => {
+        const list = await get(query(ref(database, "/operation/scroll")));
 
-      setList(
-        list.val().map((time) => {
-          const date = setHours(
-            setMinutes(new Date(), +time.toString().slice(-2)),
-            +time.toString().slice(-4, 2)
-          );
+        setList(
+          list.val().map((time) => {
+            const date = setHours(
+              setMinutes(new Date(), +time.toString().slice(-2)),
+              +time.toString().slice(-4, 2)
+            );
 
-          return { id: uuid.v4().toString(), time: format(date, "HH:mm") };
-        })
-      );
-    })();
-  }, []);
+            return { id: uuid.v4().toString(), time: format(date, "HH:mm") };
+          })
+        );
+      })();
+
+      setIsFirsRender(false);
+      return;
+    }
+
+    set(
+      ref(database, "/operation/scroll"),
+      list.map(({ time }) => time)
+    ).catch(() => {});
+
+    push(ref(database, "/history"), {
+      title: "Rolagem dos ovos",
+      time: Date.now(),
+    }).catch(() => {});
+  }, [list]);
 
   async function handleAddItem(index, time) {
     if (list.length > 3) return;
@@ -67,8 +80,6 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
         return dateA - dateB;
       })
     );
-
-    uploadList();
   }
 
   async function handleUpdateList(index: number, date: string) {
@@ -83,8 +94,6 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
         return dateA - dateB;
       });
     });
-
-    uploadList();
   }
 
   async function handleRemoveItem(index: number) {
@@ -93,21 +102,6 @@ export default function TimeList({ title, isEnabled }: ITimeListProps) {
       state.splice(index, 1);
       return state;
     });
-
-    uploadList();
-  }
-
-  async function uploadList() {
-    const uploadList = list.map(({ time }) => {
-      const parsed = parse(time, "HH:mm", new Date());
-
-      const hours = getHours(parsed).toString();
-      const minutes = getMinutes(parsed).toString();
-
-      return +"".concat(hours, minutes);
-    });
-
-    set(reference, uploadList);
   }
 
   return (
