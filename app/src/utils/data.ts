@@ -19,6 +19,8 @@ export function getRandomNumber(min, max) {
 }
 
 export function simplifyList(list, newSize) {
+  if (list.length < newSize) return list;
+ 
   const chunkSize = Math.floor(list.length / newSize);
 
   const newList = Array.from({ length: newSize }, (_, i) => {

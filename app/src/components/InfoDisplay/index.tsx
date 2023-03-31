@@ -15,7 +15,7 @@ export default function InfoDisplay({ icon, value }: InfoDisplayProps) {
     <Container
       style={{
         shadowColor: "#0000008f",
-        elevation: 4,
+        elevation: 0.6,
       }}
     >
       {icon === "thermometer" && (

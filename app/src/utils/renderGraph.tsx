@@ -6,13 +6,10 @@ import {
   Skia,
   SkPath,
   useComputedValue,
-  runTiming,
   useTiming,
-  useValue,
 } from "@shopify/react-native-skia";
 
 import { DataPoint } from "@components/Chart";
-import { useEffect, useState } from "react";
 
 interface IGraphProps {
   path: SkPath;
@@ -67,9 +64,7 @@ export function makeGraph({
   width,
   height,
   margin,
-}: IMakeGraphProps): GraphData {
-  console.log(data);
-  
+}: IMakeGraphProps): GraphData {  
   const [minValue, maxValue] = extent(data, (data) => data.value);
   const [minDate, maxDate] = extent(data, (data) => data.time);
 
@@ -90,11 +85,12 @@ export function makeGraph({
     .x((d) => xScale(d.time))
     .y((d) => yScale(d.value));
 
-  const skPath = Skia.Path.MakeFromSVGString(curvedLine(data));
+  const svgPath = curvedLine(data)
+  const skPath = Skia.Path.MakeFromSVGString(svgPath ? svgPath : "");
 
   return {
     path: skPath,
-    yAxis,
-    xAxis,
+    yAxis: yAxis.length ? yAxis : [30, 45, 60, 75],
+    xAxis: xAxis.length ? xAxis : [1680264914313, 1680268514313, 1680272114313],
   };
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { View, LayoutRectangle } from "react-native";
 
 import { Graph, makeGraph } from "@utils/renderGraph";
+import { IData } from "@hooks/useGraphData";
 
 import { Button, Container, Legend, Tab, Title, Text } from "./styles";
 
@@ -16,23 +17,20 @@ interface ChartProps {
   animationDuration: number;
   symbolLegend?: string;
   curve: CurveFactory;
-  getTodayData: () => DataPoint[];
-  getThreeDaysData: () => DataPoint[];
-  getWeekData: () => DataPoint[];
+  data: IData
 }
 
 enum Tabs {
-  OneDay = "getTodayData",
-  ThreeDays = "getThreeDaysData",
-  Week = "getWeekData",
+  OneDay = "today",
+  ThreeDays = "threeDays",
+  Week = "week",
 }
 
 export default function Chart({ title, ...props }: ChartProps) {
   const [layout, setLayout] = useState<LayoutRectangle>({} as LayoutRectangle);
   const [activeTab, setActiveTab] = useState(Tabs.OneDay);
 
-  const dataFunction = props[activeTab];
-  const data = dataFunction();
+  const data = props.data[activeTab];
 
   const { path, xAxis, yAxis } = makeGraph({
     data,
