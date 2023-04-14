@@ -2,8 +2,8 @@
 #include <addons/RTDBHelper.h>
 #include "utils.h"
 
-#define WIFI_SSID "Tay sz"
-#define WIFI_PASSWORD "88092528"
+#define WIFI_SSID "Alencar"
+#define WIFI_PASSWORD "alencar123"
 #define DATABASE_URL "chocadeira-68d24-default-rtdb.firebaseio.com"
 #define DATABASE_SECRET "ZEDhLBWUUx2BMjnuzptjkEKsjz87rIkPrkgvZ0wq"
 

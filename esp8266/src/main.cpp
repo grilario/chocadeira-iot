@@ -6,7 +6,7 @@
 
 #define LAMP_PIN D1
 #define MOTOR_PIN D2
-#define FAN_PIN D4
+#define FAN_PIN D5
 #define DHT_PIN D3
 
 float temperature = 0;
@@ -26,10 +26,11 @@ void setup()
   dht.begin();
 
   pinMode(LAMP_PIN, OUTPUT);
+  pinMode(FAN_PIN, OUTPUT);
   pinMode(MOTOR_PIN, OUTPUT);
 }
 
-#define READ_SENSORS 2000
+#define READ_SENSORS 5000
 unsigned long lastExecutedSensors = 0;
 
 #define CONTROL_DEVICE 1000
@@ -146,13 +147,13 @@ void handle_control_lamp()
     forceLampTime = false;
   }
 
-  if (temperature < 35)
+  if (temperature < 37.8)
   {
     Serial.println("Light is on!");
     digitalWrite(LAMP_PIN, HIGH);
     Utils::pushValue("/operation/light", 1);
   }
-  else if (temperature > 38)
+  else if (temperature > 39)
   {
     Serial.println("Light is off!");
     digitalWrite(LAMP_PIN, LOW);
@@ -167,14 +168,16 @@ void handle_control_fan()
     if (fanCommand == "on")
     {
       Serial.println("Fan is on!");
-      digitalWrite(FAN_PIN, HIGH);
+      pinMode(FAN_PIN, INPUT);
+      // digitalWrite(FAN_PIN, HIGH);
       Utils::pushValue("/operation/fan", 1);
 
       return;
     }
 
     Serial.println("Fan is off!");
-    digitalWrite(FAN_PIN, LOW);
+    pinMode(FAN_PIN, OUTPUT);
+    // digitalWrite(FAN_PIN, LOW);
     Utils::pushValue("/operation/fan", 0);
 
     return;
@@ -183,7 +186,8 @@ void handle_control_fan()
   if (forceFanTime)
   {
     Serial.println("Fan is off!");
-    digitalWrite(FAN_PIN, LOW);
+    pinMode(FAN_PIN, OUTPUT);
+    // digitalWrite(FAN_PIN, LOW);
     Utils::pushValue("/operation/fan", 0);
 
     forceFanTime = false;
@@ -192,13 +196,15 @@ void handle_control_fan()
   if (humidity > 65)
   {
     Serial.println("Fan is on!");
-    digitalWrite(FAN_PIN, HIGH);
+    pinMode(FAN_PIN, INPUT);
+    // digitalWrite(FAN_PIN, HIGH);
     Utils::pushValue("/operation/fan", 1);
   }
   else if (temperature < 50)
   {
     Serial.println("Fan is off!");
-    digitalWrite(FAN_PIN, LOW);
+    pinMode(FAN_PIN, OUTPUT);
+    // digitalWrite(FAN_PIN, LOW);
     Utils::pushValue("/operation/fan", 0);
   }
 }
