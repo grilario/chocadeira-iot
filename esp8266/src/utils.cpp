@@ -2,8 +2,8 @@
 #include <addons/RTDBHelper.h>
 #include "utils.h"
 
-#define WIFI_SSID "Alencar"
-#define WIFI_PASSWORD "alencar123"
+#define WIFI_SSID "Micks IoT"
+#define WIFI_PASSWORD "micks2023"
 #define DATABASE_URL "chocadeira-68d24-default-rtdb.firebaseio.com"
 #define DATABASE_SECRET "ZEDhLBWUUx2BMjnuzptjkEKsjz87rIkPrkgvZ0wq"
 
@@ -77,6 +77,11 @@ namespace Utils
   void setString(const char *path, String string)
   {
     Firebase.setStringAsync(fbdo, path, string);
+  }
+
+   void setFloat(const char *path, float value)
+  {
+    Firebase.setFloatAsync(fbdo, path, value);
   }
 
   std::tuple<int, String> getCommandTime(Command command)

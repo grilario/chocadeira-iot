@@ -25,6 +25,7 @@ namespace Utils
   unsigned long getEpochTime();
   int getHours();
   void setString(const char *path, String string);
+  void setFloat(const char *path, float value);
   std::tuple<int, String> getCommandTime(Command command);
   void clearCommandTime(Command command);
   void pushValue(const char *path, float value);

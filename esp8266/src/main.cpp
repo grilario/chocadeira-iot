@@ -30,8 +30,11 @@ void setup()
   pinMode(MOTOR_PIN, OUTPUT);
 }
 
-#define READ_SENSORS 5000
+#define READ_SENSORS 720000
 unsigned long lastExecutedSensors = 0;
+
+#define REAL_TIME_SENSORS 1000
+unsigned long lastExecutedRealTimeSensors = 0;
 
 #define CONTROL_DEVICE 1000
 unsigned long lastExecutedDevice = 0;
@@ -45,6 +48,9 @@ unsigned long lastExecutedScroll = 0;
 unsigned long lampTime = 0;
 unsigned long fanTime = 0;
 unsigned long scrollTime = 0;
+
+int lampState = 0;
+int fanState = 0;
 
 String lampCommand;
 String fanCommand;
@@ -62,11 +68,25 @@ void handle_read_sensors()
     return;
   }
 
+  Utils::pushValue("/operation/temperature", temperature);
+  Utils::pushValue("/operation/humidity", humidity);
+}
+
+void handle_real_time_sensors()
+{
+  temperature = dht.readTemperature();
+  humidity = dht.readHumidity();
+
+  if (isnan(temperature) || isnan(humidity))
+  {
+    return;
+  }
+
   Serial.printf("Temperature %f \n", temperature);
   Serial.printf("Humidity %f \n", humidity);
 
-  Utils::pushValue("/operation/temperature", temperature);
-  Utils::pushValue("/operation/humidity", humidity);
+  Utils::setFloat("/real_time/temperature", temperature);
+  Utils::setFloat("/real_time/humidity", humidity);
 }
 
 void handle_execute_command()
@@ -126,14 +146,14 @@ void handle_control_lamp()
     {
       Serial.println("Light is on!");
       digitalWrite(LAMP_PIN, HIGH);
-      Utils::pushValue("/operation/light", 1);
+      lampState = 1;
 
       return;
     }
 
     Serial.println("Light is off!");
     digitalWrite(LAMP_PIN, LOW);
-    Utils::pushValue("/operation/light", 0);
+    lampState = 0;
 
     return;
   }
@@ -142,7 +162,7 @@ void handle_control_lamp()
   {
     Serial.println("Light is off!");
     digitalWrite(LAMP_PIN, LOW);
-    Utils::pushValue("/operation/light", 0);
+    lampState = 0;
 
     forceLampTime = false;
   }
@@ -151,13 +171,13 @@ void handle_control_lamp()
   {
     Serial.println("Light is on!");
     digitalWrite(LAMP_PIN, HIGH);
-    Utils::pushValue("/operation/light", 1);
+    lampState = 1;
   }
   else if (temperature > 39)
   {
     Serial.println("Light is off!");
     digitalWrite(LAMP_PIN, LOW);
-    Utils::pushValue("/operation/light", 0);
+    lampState = 0;
   }
 }
 
@@ -170,7 +190,7 @@ void handle_control_fan()
       Serial.println("Fan is on!");
       pinMode(FAN_PIN, INPUT);
       // digitalWrite(FAN_PIN, HIGH);
-      Utils::pushValue("/operation/fan", 1);
+      fanState = 1;
 
       return;
     }
@@ -178,7 +198,7 @@ void handle_control_fan()
     Serial.println("Fan is off!");
     pinMode(FAN_PIN, OUTPUT);
     // digitalWrite(FAN_PIN, LOW);
-    Utils::pushValue("/operation/fan", 0);
+    fanState = 0;
 
     return;
   }
@@ -188,7 +208,7 @@ void handle_control_fan()
     Serial.println("Fan is off!");
     pinMode(FAN_PIN, OUTPUT);
     // digitalWrite(FAN_PIN, LOW);
-    Utils::pushValue("/operation/fan", 0);
+    fanState = 0;
 
     forceFanTime = false;
   }
@@ -198,14 +218,14 @@ void handle_control_fan()
     Serial.println("Fan is on!");
     pinMode(FAN_PIN, INPUT);
     // digitalWrite(FAN_PIN, HIGH);
-    Utils::pushValue("/operation/fan", 1);
+    fanState = 1;
   }
   else if (temperature < 50)
   {
     Serial.println("Fan is off!");
     pinMode(FAN_PIN, OUTPUT);
     // digitalWrite(FAN_PIN, LOW);
-    Utils::pushValue("/operation/fan", 0);
+    fanState = 0;
   }
 }
 
@@ -229,6 +249,17 @@ void loop()
   {
     lastExecutedSensors = currentMillis;
     handle_read_sensors();
+
+    Utils::pushValue("/operation/light", lampState);
+    Utils::pushValue("/operation/fan", fanState);
+  }
+
+  if (currentMillis - lastExecutedRealTimeSensors >= REAL_TIME_SENSORS)
+  {
+    lastExecutedRealTimeSensors = currentMillis;
+    handle_real_time_sensors();
+
+    Utils::setFloat("/real_time/light", lampState);
   }
 
   if (currentMillis - lastExecutedCommand >= EXECUTE_COMMAND)
