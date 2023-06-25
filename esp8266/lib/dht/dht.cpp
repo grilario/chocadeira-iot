@@ -21,15 +21,6 @@ namespace components
     this->temperature = isnan(temperature) ? this->temperature : temperature;
     this->humidity = isnan(humidity) ? this->humidity : humidity;
 
-#ifdef COMPONENT_DHT_DEBUG
-
-    Serial.println();
-    Serial.println("DEBUG_DHT");
-    Serial.print("\t Temperature: ");
-    Serial.println(temperature);
-    Serial.print("\t Humidity: ");
-    Serial.println(humidity);
-
-#endif
+    Serial.printf("DHT:\t Temperature - %f°C \t Humidity - %f%% \n", temperature, humidity);
   }
 }
