@@ -12,10 +12,11 @@ namespace components
   private:
     DHT *dht;
     uint8_t light_pin = 0;
-    bool is_on = false;
     unsigned long force_time = 0;
 
   public:
+    bool is_on = false;
+    
     Light(unsigned long intervalMs, int light_pin, DHT *dht);
 
     virtual void setup();

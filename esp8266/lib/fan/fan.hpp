@@ -12,10 +12,10 @@ namespace components
   private:
     DHT *dht;
     uint8_t fan_pin = 0;
-    bool is_on = false;
     unsigned long force_time = 0;
 
   public:
+    bool is_on = false;
     Fan(unsigned long intervalMs, int fan_pin, DHT *dht);
 
     virtual void setup();
