@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTheme } from "styled-components/native";
 
 import Control from "@screens/Control";
-import History from "@screens/History";
+import Historic from "@screens/Historic";
 import Monitoring from "@screens/Monitoring";
 import Settings from "@screens/Settings";
 import Speech from "@screens/Speech";
@@ -58,8 +58,8 @@ export default function BottomTabNavigation() {
           }}
         />
         <Tab.Screen
-          name="History"
-          component={History}
+          name="Historic"
+          component={Historic}
           options={{
             tabBarIcon: ({ color, size }) => <ClockClockwise size={size} color={color} />,
           }}
