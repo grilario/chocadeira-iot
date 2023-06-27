@@ -8,6 +8,7 @@ declare module "styled-components/native" {
       text: string;
       textSecondary: string;
       shadow: string;
+      secondary: string;
     };
   }
 }

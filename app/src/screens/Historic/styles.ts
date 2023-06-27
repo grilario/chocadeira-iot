@@ -14,7 +14,7 @@ export const HistoricItem = styled.View`
 `;
 
 export const HistoricLabel = styled.Text`
-  font-weight: 500;
+  font-weight: 400;
 `;
 
 export const HistoricTime = styled.Text`

@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import { DefaultTheme as LightTime, NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -12,6 +13,7 @@ export const theme: DefaultTheme = {
     text: "#1d1d1f",
     textSecondary: "#8694A9",
     shadow: "#f8f9fa",
+    secondary: "#f0f2f4",
   },
 };
 
