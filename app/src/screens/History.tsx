@@ -1,9 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 export default function History() {
-  return (
-    <View>
-      <Text>History</Text>
-    </View>
-  );
+  return <View></View>;
 }

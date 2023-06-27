@@ -3,6 +3,7 @@ import { ScrollView } from "react-native";
 import TimerControl from "@components/TimerControl";
 
 import { Container, Section, Title } from "./styles";
+import TimeList from "@components/TimeList";
 
 export default function Control() {
   return (
@@ -14,8 +15,13 @@ export default function Control() {
         </Section>
 
         <Section>
-          <Title>Fan</Title>
+          <Title>Ventoinha</Title>
           <TimerControl />
+        </Section>
+
+        <Section>
+          <Title>Viragem dos Ovos</Title>
+          <TimeList />
         </Section>
       </Container>
     </ScrollView>

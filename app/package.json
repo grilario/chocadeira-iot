@@ -9,9 +9,11 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "6.7.3",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@types/react": "~18.0.27",
+    "date-fns": "^2.30.0",
     "expo": "~48.0.18",
     "expo-status-bar": "~1.4.4",
     "phosphor-react-native": "^1.1.2",

@@ -52,5 +52,7 @@ export const Submit = styled.Pressable<{ primary?: boolean }>`
 `;
 
 export const SubmitText = styled.Text<{ primary?: boolean }>`
+  font-size: 14px;
+  font-weight: 600;
   color: ${(props) => (props.primary ? props.theme.colors.white : props.theme.colors.text)};
 `;
