@@ -28,7 +28,7 @@ export default function TimerControl({ powerOn, powerOff }: TimerControlProps) {
     <Container>
       <InputContainer style={{ elevation: 1.8 }}>
         <Button
-          style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
+          style={({ pressed }) => [{ elevation: 1.8, opacity: pressed ? 0.8 : 1 }]}
           onPress={() => {
             setMinutes((prev) => (Number(prev) - 1).toString());
           }}
@@ -51,7 +51,7 @@ export default function TimerControl({ powerOn, powerOff }: TimerControlProps) {
           <Legend>minutos</Legend>
         </InputGroup>
         <Button
-          style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
+          style={({ pressed }) => [{ elevation: 1.8, opacity: pressed ? 0.8 : 1 }]}
           onPress={() => {
             setMinutes((prev) => (Number(prev) + 1).toString());
           }}

@@ -8,7 +8,7 @@ import { useTheme } from "styled-components/native";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
 
-import { Button, Container, Divider, Item, Text } from "./styles";
+import { Button, Container, Divider, IconButton, Item, Text } from "./styles";
 
 function uniqueID() {
   return Math.floor(Math.random() * Date.now());
@@ -63,19 +63,18 @@ export default function TimeList() {
 
   return (
     <Container>
-      <Divider />
-
       <ListItem
-        icon={<Plus color={colors.primary} size={24} />}
+        icon={<Plus color={colors.white} size={18} />}
         data={{ id: null, time: new Date() }}
         addItem={handleAddItem}
       />
+      
       <Divider />
 
       {list.map((time) => (
         <Animated.View key={time.id} layout={Layout}>
           <ListItem
-            icon={<Trash color={colors.primary} size={24} />}
+            icon={<Trash color={colors.white} size={18} />}
             data={time}
             deleteItem={handleRemoveItem}
             updateItem={handleUpdateList}
@@ -109,14 +108,14 @@ function ListItem({ icon, data: { id, time }, updateItem, deleteItem, addItem }:
       <Button onPress={handleShow}>
         <Text>{format(date, "HH:mm")}</Text>
       </Button>
-      <Button
+      <IconButton
         onPress={() => {
           addItem && addItem(date);
           deleteItem && deleteItem(id);
         }}
       >
         {icon}
-      </Button>
+      </IconButton>
     </Item>
   );
 }

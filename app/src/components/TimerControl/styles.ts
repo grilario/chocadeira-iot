@@ -26,12 +26,12 @@ export const Input = styled.TextInput`
 export const Legend = styled.Text``;
 
 export const Button = styled.Pressable`
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   align-items: center;
   justify-content: center;
-  padding: 8px;
   background-color: ${(props) => props.theme.colors.primary};
+  opacity: 0.3;
   border-radius: 999px;
 `;
 
@@ -48,7 +48,7 @@ export const Submit = styled.Pressable<{ primary?: boolean }>`
   padding: 6px;
   background-color: ${(props) => (props.primary ? props.theme.colors.primary : props.theme.colors.white)};
   border: ${(props) => (props.primary ? "1px #00000000" : `1px ${props.theme.colors.text}`)};
-  border-radius: 8px;
+  border-radius: 6px;
 `;
 
 export const SubmitText = styled.Text<{ primary?: boolean }>`

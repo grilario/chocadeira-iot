@@ -11,6 +11,7 @@ export const theme: DefaultTheme = {
     white: "#fbfefb",
     text: "#1d1d1f",
     textSecondary: "#8694A9",
+    shadow: "#f8f9fa",
   },
 };
 
