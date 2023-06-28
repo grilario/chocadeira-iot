@@ -43,6 +43,7 @@ export default function BottomTabNavigation() {
           name="Speech"
           component={Speech}
           options={{
+            
             tabBarIcon: ({ focused, size }) => (
               <View
                 style={{
