@@ -1,8 +1,10 @@
 import { ScrollView, View } from "react-native";
-import { Svg, Path, Rect, Text, G, Defs, LinearGradient, Stop } from "react-native-svg";
+import { Svg, Path, Rect, Text, G, Defs, LinearGradient, Stop, PathProps } from "react-native-svg";
 import format from "date-fns/format";
 
 import { useTheme } from "styled-components/native";
+import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
+import { useEffect } from "react";
 
 interface GraphProps {
   data: {
@@ -15,8 +17,22 @@ interface GraphProps {
   height: number;
 }
 
+const AnimatedPath = Animated.createAnimatedComponent(Path);
+
 export default function Graph({ data, width, widthMultiplier, height }: GraphProps) {
   const { colors } = useTheme();
+
+  const dash = width * 1.8 * widthMultiplier;
+  const strokeDashoffset = useSharedValue(dash);
+  const animatedProps = useAnimatedProps<PathProps>(() => {
+    return {
+      strokeDashoffset: withTiming(strokeDashoffset.value, { duration: 1500 }),
+    };
+  });
+
+  useEffect(() => {
+    strokeDashoffset.value = 0;
+  }, []);
 
   return (
     <View>
@@ -48,7 +64,14 @@ export default function Graph({ data, width, widthMultiplier, height }: GraphPro
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ width, aspectRatio: 16 / 9 }}>
         <View style={{ width: width * widthMultiplier, height: "100%" }}>
           <Svg height="100%" width="100%">
-            <Path d={data.path} stroke={colors.primary} strokeWidth={3.2} />
+            <AnimatedPath
+              animatedProps={animatedProps}
+              d={data.path}
+              stroke={colors.primary}
+              strokeWidth={3.2}
+              strokeDasharray={dash}
+              strokeDashoffset={dash}
+            />
 
             {data.xTicks.map(({ position, value }) => (
               <G key={value.getTime()} y={height - 26}>
