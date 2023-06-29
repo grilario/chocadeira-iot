@@ -8,6 +8,7 @@ import wordsToNumbers from "words-to-numbers";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
 import { Container, MessageContainer, MessageText, ResultContainer, ResultMessage, Section, Title } from "./styles";
+import { sendCommand } from "@services/firebase";
 
 type Results = { type: "success" | "error"; message: string }[];
 
@@ -46,7 +47,7 @@ export default function Speech({ navigation }: BottomTabScreenProps<{}>) {
       ["horas", 3_600_000],
     ];
 
-    for (const message of event.value) {
+    for (const message of event.value.reverse()) {
       for (const [index, word] of message.split(" ").entries()) {
         typeOptions.powerOn.includes(word.toLowerCase()) && (type = "powerOn");
         typeOptions.powerOff.includes(word.toLowerCase()) && (type = "powerOff");
@@ -94,7 +95,18 @@ export default function Speech({ navigation }: BottomTabScreenProps<{}>) {
     setResults((results) => [...results, { type: "success", message }]);
     speech.speak(message, { language: "pt-BR" });
 
-    console.log(type, sensor);
+    const names = {
+      light: {
+        powerOn: `Ligou lâmpada`,
+        powerOff: `Desligou lâmpada`,
+      },
+      fan: {
+        powerOn: `Ligou ventoinha`,
+        powerOff: `Desligou ventoinha`,
+      },
+    };
+
+    sendCommand(sensor, { time: timeInMilliseconds, value: type === "powerOn" }, names[sensor][type]).catch(() => {});
   }, []);
 
   const onError = useCallback((event: SpeechErrorEvent) => {}, []);

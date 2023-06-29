@@ -1,6 +1,8 @@
 import { ScrollView, View } from "react-native";
 import { Svg, Path, Rect, Text, G, Defs, LinearGradient, Stop, PathProps } from "react-native-svg";
+
 import format from "date-fns/format";
+import ptBR from "date-fns/locale/pt-BR";
 
 import { useTheme } from "styled-components/native";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
@@ -15,11 +17,12 @@ interface GraphProps {
   width: number;
   widthMultiplier: number;
   height: number;
+  formatSuffix: string;
 }
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-export default function Graph({ data, width, widthMultiplier, height }: GraphProps) {
+export default function Graph({ data, width, widthMultiplier, height, formatSuffix }: GraphProps) {
   const { colors } = useTheme();
 
   const dash = width * 1.8 * widthMultiplier;
@@ -47,6 +50,7 @@ export default function Graph({ data, width, widthMultiplier, height }: GraphPro
         {data.yTicks.map(({ position, value }) => (
           <Text key={value} fill="black" y={position} x={0} fontSize={12} textAnchor="start">
             {value}
+            {formatSuffix}
           </Text>
         ))}
       </Svg>
@@ -76,10 +80,10 @@ export default function Graph({ data, width, widthMultiplier, height }: GraphPro
             {data.xTicks.map(({ position, value }) => (
               <G key={value.getTime()} y={height - 26}>
                 <Text fill="black" x={position} y={0} fontSize={12} textAnchor="middle">
-                  {format(value, "HH:mm")}
+                  {format(value, "HH:mm", { locale: ptBR })}
                 </Text>
                 <Text fill="black" x={position} y={12} fontSize={12} textAnchor="middle">
-                  {format(value, "MM/dd")}
+                  {format(value, "MM/dd", { locale: ptBR })}
                 </Text>
               </G>
             ))}

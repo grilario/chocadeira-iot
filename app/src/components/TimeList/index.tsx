@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import Animated, { Layout } from "react-native-reanimated";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
@@ -9,6 +9,7 @@ import format from "date-fns/format";
 import parse from "date-fns/parse";
 
 import { Button, Container, Divider, IconButton, Item, Text } from "./styles";
+import { getCommand, sendCommand } from "@services/firebase";
 
 function uniqueID() {
   return Math.floor(Math.random() * Date.now());
@@ -32,6 +33,14 @@ export default function TimeList() {
 
   const [list, setList] = useState<TimeItem[]>([]);
 
+  useEffect(() => {
+    (async () => {
+      const list = await getCommand("scroll");
+
+      setList(list.map((value) => ({ id: uniqueID(), time: parse(value, "HH:mm", 0) })));
+    })();
+  }, []);
+
   async function handleAddItem(time: Date) {
     if (list.length > 3) return;
 
@@ -43,8 +52,6 @@ export default function TimeList() {
   }
 
   async function handleUpdateList(id: number, time: Date) {
-    console.log("Hello");
-
     setList((prevState) => {
       const newState = prevState.filter((time) => time.id !== id);
       newState.push({ id, time });
@@ -53,7 +60,13 @@ export default function TimeList() {
         return a.time.getTime() - b.time.getTime();
       });
 
-      return [...newState];
+      sendCommand(
+        "scroll",
+        newState.map(({ time }) => format(time, "HH:mm")),
+        "Alterou rolagem dos ovos"
+      );
+
+      return newState;
     });
   }
 
@@ -68,7 +81,7 @@ export default function TimeList() {
         data={{ id: null, time: new Date() }}
         addItem={handleAddItem}
       />
-      
+
       <Divider />
 
       {list.map((time) => (

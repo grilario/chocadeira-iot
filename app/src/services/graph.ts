@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-type Data = { time: number; value: number };
+export type Data = { time: number; value: number };
 
 interface MakePathProps {
   width: number;
