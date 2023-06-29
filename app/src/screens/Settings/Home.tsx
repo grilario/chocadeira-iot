@@ -12,14 +12,14 @@ export default function Home({ navigation }) {
       <Container>
         <Title>Configurações</Title>
         <Section style={{ elevation: 1.8 }}>
-          <Option onPress={() => navigation.push("Assistant")}>
+          {/* <Option onPress={() => navigation.push("Assistant")}>
             <IconContainer>
               <ChalkboardTeacher size={18} color={colors.white} />
             </IconContainer>
             <Label>Assistente</Label>
           </Option>
 
-          <Separator />
+          <Separator /> */}
 
           <Option onPress={() => navigation.push("WiFi")}>
             <IconContainer>

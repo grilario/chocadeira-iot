@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Pressable, ScrollView } from "react-native";
 import { useTheme } from "styled-components/native";
 import { ArrowLeft } from "phosphor-react-native";
@@ -6,6 +7,13 @@ import { Container, HeaderContainer, Input, Label, SubmitButton, SubmitText, Tit
 
 export default function WiFi({ navigation }) {
   const { colors } = useTheme();
+
+  const [ssid, setSSID] = useState("");
+  const [password, setPassword] = useState("");
+
+  const changePassword = async () => {
+    fetch("http://192.168.4.1", { method: "POST", body: JSON.stringify({ ssid, password }) });
+  };
 
   return (
     <ScrollView>
@@ -17,10 +25,21 @@ export default function WiFi({ navigation }) {
       </HeaderContainer>
       <Container>
         <Label>Nome</Label>
-        <Input cursorColor={colors.text} style={{ elevation: 0.8 }} />
+        <Input
+          cursorColor={colors.text}
+          style={{ elevation: 0.8 }}
+          value={ssid}
+          onChangeText={(text) => setSSID(text)}
+        />
         <Label>Senha</Label>
-        <Input cursorColor={colors.text} style={{ elevation: 0.8 }} secureTextEntry={true} />
-        <SubmitButton style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}>
+        <Input
+          cursorColor={colors.text}
+          style={{ elevation: 0.8 }}
+          secureTextEntry={true}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <SubmitButton onPress={changePassword} style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}>
           <SubmitText>Salvar</SubmitText>
         </SubmitButton>
       </Container>

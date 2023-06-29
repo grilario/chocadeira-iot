@@ -14,11 +14,14 @@ export function realtimeSensor(delay: number) {
 
   const request = query(ref(database, "current"));
 
-  const interval = setInterval(async () => {
+  const fetch = async () => {
     const response = await get(request);
 
     event.emit("change", response.val());
-  }, delay);
+  };
+
+  fetch();
+  const interval = setInterval(fetch, delay);
 
   return { event, unmount: () => clearInterval(interval) };
 }
