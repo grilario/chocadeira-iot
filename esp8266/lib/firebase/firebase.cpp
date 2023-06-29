@@ -41,6 +41,11 @@ namespace components
   void Firebase::update()
   {
     {
+      if (!https_stream.connected())
+      {
+        https_stream.begin(socket_stream, url + "/control.json");
+      }
+
       auto stream = https_stream.getStreamPtr();
 
       if (stream->available())

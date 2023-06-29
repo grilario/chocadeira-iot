@@ -12,10 +12,10 @@
 auto componentManager = new ComponentManager();
 
 auto wiFi = new components::WiFi();
-auto dht = new components::DHT(10000, D0);
+auto dht = new components::DHT(10000, D3);
 auto light = new components::Light(500, D1, dht);
-auto fan = new components::Fan(500, D1, dht);
-auto scrolling = new components::Scrolling(500, D1);
+auto fan = new components::Fan(500, D2, dht);
+auto scrolling = new components::Scrolling(500, D4);
 auto movement = new components::Movement(500, D5);
 auto firebase = new components::Firebase(500, "https://chocadeira-68d24-default-rtdb.firebaseio.com", dht, movement, light, fan, scrolling);
 
