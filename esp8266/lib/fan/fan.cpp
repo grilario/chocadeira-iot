@@ -33,7 +33,7 @@ namespace components
     {
       // Return if force is more time
       auto now = millis();
-      if (now + time <= force_time)
+      if (now + time <= force_time && time == 0)
       {
         return;
       }
@@ -52,7 +52,7 @@ namespace components
     {
       // Return if force is more time
       auto now = millis();
-      if (now + time <= force_time)
+      if (now + time <= force_time && time == 0)
       {
         return;
       }
