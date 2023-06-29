@@ -1,9 +1,9 @@
 import { ScrollView } from "react-native";
 
 import TimerControl from "@components/TimerControl";
+import TimeList from "@components/TimeList";
 
 import { Container, Section, Title } from "./styles";
-import TimeList from "@components/TimeList";
 
 export default function Control() {
   return (
