@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Chocadeira IoT",
+    "slug": "chocadeira",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +12,6 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
-    "plugins": ["@react-native-voice/voice"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.brooder.app"
@@ -26,7 +25,8 @@
       "package": "com.brooder.app"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/icon.png"
+    },
+    "plugins": ["@react-native-voice/voice"]
   }
 }
