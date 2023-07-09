@@ -16,8 +16,13 @@ export function realtimeSensor(delay: number) {
 
   const fetch = async () => {
     const response = await get(request);
+    const { temperature, humidity, ...data } = response.val();
 
-    event.emit("change", response.val());
+    event.emit("change", {
+      ...data,
+      humidity: Math.round(humidity * 10) / 10,
+      temperature: Math.round(temperature * 10) / 10,
+    });
   };
 
   fetch();

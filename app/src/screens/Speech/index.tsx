@@ -124,7 +124,7 @@ export default function Speech({ navigation }: BottomTabScreenProps<{}>) {
     Voice.onSpeechError = onError;
     Voice.onSpeechPartialResults = (e) => setMessage(e.value[0]);
     Voice.onSpeechStart = () => {
-      setMessage("");
+      setMessage("...");
       setIsRecognizing(true);
     };
     Voice.onSpeechEnd = () => {
