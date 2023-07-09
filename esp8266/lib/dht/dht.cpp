@@ -5,7 +5,7 @@ namespace components
   DHT::DHT(unsigned long intervalMs, int dht_pin)
   {
     this->intervalMs = intervalMs;
-    this->dht = new ::DHT(dht_pin, DHT12);
+    this->dht = new ::DHT(dht_pin, DHT22);
   }
 
   void DHT::setup()
